@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.grafkom'
+version = '1.0'
+description = '3D Visual Realism Suite - Grafika Komputer Minggu 11 (Java 17, LWJGL 3, JOML, GLSL)'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+def lwjglVersion = '3.3.3'
+def jomlVersion = '1.10.5'
+
+// Otomatis pilih native LWJGL sesuai OS, jadi tidak perlu edit manual:
+// Windows -> natives-windows, macOS -> natives-macos, Linux -> natives-linux.
+def osName = System.getProperty('os.name').toLowerCase(Locale.ROOT)
+def lwjglNatives = osName.contains('win') ? 'natives-windows'
+        : osName.contains('mac') ? 'natives-macos' : 'natives-linux'
+
+dependencies {
+    implementation "org.joml:joml:${jomlVersion}"
+    implementation "org.lwjgl:lwjgl:${lwjglVersion}"
+    implementation "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
+    implementation "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
+    implementation "org.lwjgl:lwjgl-stb:${lwjglVersion}"
+    runtimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:${lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:${lwjglVersion}:${lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-opengl:${lwjglVersion}:${lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-stb:${lwjglVersion}:${lwjglNatives}"
+    // Native di atas dipilih otomatis dari OS di atas.
+    // (Sebelumnya tertulis natives-linux, yang gagal di Windows.)
+}
+
+application {
+    mainClass = 'com.grafkom.viewing3d.Main'
+}
+
+run {
+    // Pastikan working directory = root proyek supaya
+    // src/main/resources/shaders dan textures ketemu.
+    workingDir = projectDir
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

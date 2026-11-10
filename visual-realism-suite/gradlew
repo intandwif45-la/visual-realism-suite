@@ -1,0 +1,12 @@
+#!/bin/sh
+# Gradle wrapper (sederhana) - memakai Gradle yang terinstall di laptop.
+# Kalau Gradle belum terinstall, install dulu (lihat README.md),
+# atau unduh distribusi Gradle resmi dan jalankan ./gradlew run.
+set -e
+if command -v gradle >/dev/null 2>&1; then
+  exec gradle "$@"
+else
+  echo "Gradle tidak ditemukan. Install Gradle atau JDK 17 + Gradle dulu (lihat README.md)."
+  echo "Alternatif: jalankan 'gradle run' setelah Gradle terinstall."
+  exit 1
+fi
